@@ -76,6 +76,18 @@ public class DriverLoginRegisterActivity extends AppCompatActivity {
 
             }
         });
+
+        DriverLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String email = EmailDriver.getText().toString();
+                String password = PasswordDriver.getText().toString();
+
+                SignInDriver(email, password);
+
+            }
+        });
     }
 
     public static boolean isEmailValid(String email) {
@@ -134,5 +146,39 @@ public class DriverLoginRegisterActivity extends AppCompatActivity {
                     }
                 });
         }
+    }
+
+    private void SignInDriver(String email, String password) {
+
+        if(TextUtils.isEmpty(email)) {
+            Toast.makeText(DriverLoginRegisterActivity.this, "Please enter your e-mail address...", Toast.LENGTH_SHORT).show();
+        }
+        if(TextUtils.isEmpty(password)) {
+            Toast.makeText(DriverLoginRegisterActivity.this, "Please enter your password...", Toast.LENGTH_SHORT).show();
+        }
+        if(!isEmailValid(email)) {
+            Toast.makeText(DriverLoginRegisterActivity.this, "Please enter valid e-mail address...", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            LoadingBar.setTitle("Driver SignIn");
+            LoadingBar.setMessage("Please wait, while we are checking your credientials...");
+            LoadingBar.show();
+
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()) {
+                        Toast.makeText(DriverLoginRegisterActivity.this, "Driver SignIn successfully..", Toast.LENGTH_SHORT).show();
+                        LoadingBar.dismiss();
+                    }
+                    else {
+
+                        Toast.makeText(DriverLoginRegisterActivity.this, "Driver SignIn not successfully..", Toast.LENGTH_SHORT).show();
+                        LoadingBar.dismiss();
+                    }
+                }
+            });
+        }
+
     }
 }
