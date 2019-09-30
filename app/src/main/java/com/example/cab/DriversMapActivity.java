@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -21,6 +23,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -94,6 +99,14 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
 
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference DriverAvailibilityRef = FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+
+        //object is used to read and write geo location data to your Firebase database and to create queries. To create a new GeoFire instance you need to attach it to a Firebase database reference
+        GeoFire geoFire = new GeoFire(DriverAvailibilityRef);
+
+        geoFire.setLocation(userID, new GeoLocation(location.getLatitude(), location.getLongitude()));
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -105,4 +118,19 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
 
         googleApiClient.connect();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference DriverAvailibilityRef = FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+
+        //object is used to read and write geo location data to your Firebase database and to create queries. To create a new GeoFire instance you need to attach it to a Firebase database reference
+        GeoFire geoFire = new GeoFire(DriverAvailibilityRef);
+
+        geoFire.removeLocation(userID);
+
+    }
+
 }
