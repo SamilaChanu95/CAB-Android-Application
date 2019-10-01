@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -169,6 +170,9 @@ import java.util.regex.Pattern;
                      if(task.isSuccessful()) {
                          Toast.makeText(CustomerLoginRegisterActivity.this, "Customer SignIn successfully..", Toast.LENGTH_SHORT).show();
                          LoadingBar.dismiss();
+
+                         Intent customerIntent = new Intent(CustomerLoginRegisterActivity.this, CustomersMapActivity.class);
+                         startActivity(customerIntent);
                      }
                      else {
 
