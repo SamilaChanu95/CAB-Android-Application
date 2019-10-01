@@ -13,6 +13,8 @@ import android.widget.Button;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -48,9 +51,13 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference CustomerDatabaseRef;
+    private DatabaseReference DriverLocationRef;
 
     private String customerID;
     private LatLng CustomerPickUpLocation;
+    private int radius = 1;
+    private Boolean driverFound = false;
+    private String driverFoundID;
 
 
     @Override
@@ -62,6 +69,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         currentUser = mAuth.getCurrentUser();
         customerID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         CustomerDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Customers Requests");
+        DriverLocationRef = FirebaseDatabase.getInstance().getReference().child("Drivers Available");
 
         CustomerLogoutButton = (Button) findViewById(R.id.customer_logout_btn);
         CallCabCarButton = (Button) findViewById(R.id.customer_call_btn);
@@ -90,6 +98,12 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
                 CustomerPickUpLocation = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("Pick up customer from here."));
+
+
+                //CallCabCarButton.setText("Getting your Driver....");// when click the call button then show that message
+
+                //get the closest driver accourding to the location of the customer
+                GetClosestDriverCab();
             }
         });
     }
@@ -157,5 +171,51 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         welcomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(welcomeIntent);
         finish();
+    }
+
+    private void GetClosestDriverCab()
+    {
+        GeoFire geoFire = new GeoFire(DriverLocationRef);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(CustomerPickUpLocation.latitude, CustomerPickUpLocation.longitude), radius);
+        geoQuery.removeAllListeners();
+
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+
+                if(!driverFound)
+                {
+                    driverFound = true;
+                    driverFoundID = key;
+                }
+
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+                if(!driverFound)
+                {
+                    radius = radius + 1;
+                    GetClosestDriverCab();
+                }
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
     }
 }
