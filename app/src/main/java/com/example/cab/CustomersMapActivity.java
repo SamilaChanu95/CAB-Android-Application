@@ -42,10 +42,15 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     LocationRequest locationRequest;
 
     private Button CustomerLogoutButton;
-    private Button CustomerCallButton;
+    private Button CallCabCarButton;
     private Button CustomerSettingsButton;
+
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private DatabaseReference CustomerDatabaseRef;
+
+    private String customerID;
+    private LatLng CustomerPickUpLocation;
 
 
     @Override
@@ -55,8 +60,11 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        customerID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        CustomerDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Customers Requests");
 
         CustomerLogoutButton = (Button) findViewById(R.id.customer_logout_btn);
+        CallCabCarButton = (Button) findViewById(R.id.customer_call_btn);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -70,6 +78,18 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
                 mAuth.signOut();
                 LogoutCustomer();
 
+            }
+        });
+
+        CallCabCarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                GeoFire geoFire = new GeoFire(CustomerDatabaseRef);
+                geoFire.setLocation(customerID, new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()));
+
+                CustomerPickUpLocation = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(CustomerPickUpLocation).title("Pick up customer from here."));
             }
         });
     }
