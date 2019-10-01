@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentActivity;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -18,6 +20,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -28,7 +32,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
     private GoogleMap mMap;
     GoogleApiClient googleApiClient;
-    Location lastlocation;
+    Location lastLocation;
     LocationRequest locationRequest;
 
     FirebaseAuth mAuth;
@@ -63,7 +67,7 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
 
     }
-    
+
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -76,6 +80,12 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
 
     @Override
     public void onLocationChanged(Location location) {
+
+        lastLocation = location;
+
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
 
     }
 
