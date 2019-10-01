@@ -7,5 +7,22 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="AppTheme.RoundedRightCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape_right</item>
+    </style>
+    <style name="AppTheme.RoundedLeftCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape_left</item>
+    </style>
+    <style name="AppTheme.RoundedCornerLoginButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape_login</item>
+    </style>
+    <style name="AppTheme.RoundedCornerRegisterButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape_register</item>
+    </style>
+    <style name="AppTheme.RoundedCornerDriverButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape_driver</item>
+    </style>
+    <style name="AppTheme.RoundedCornerCustomerButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape_customer</item>
+    </style>
 </resources>
