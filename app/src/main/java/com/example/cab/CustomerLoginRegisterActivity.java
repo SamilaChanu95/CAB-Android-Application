@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +34,8 @@ import java.util.regex.Pattern;
     private ProgressDialog LoadingBar;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference CustomerDatabaseRef;
+    private String onlineCustomerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +139,15 @@ import java.util.regex.Pattern;
                  @Override
                  public void onComplete(@NonNull Task<AuthResult> task) {
                      if(task.isSuccessful()) {
+
+                         onlineCustomerID = mAuth.getCurrentUser().getUid();
+                         CustomerDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(onlineCustomerID);
+
+                         CustomerDatabaseRef.setValue(true);
+
+                         Intent driverIntent = new Intent(CustomerLoginRegisterActivity.this, CustomersMapActivity.class);
+                         startActivity(driverIntent);
+
                          Toast.makeText(CustomerLoginRegisterActivity.this, "Customer Register successfully..", Toast.LENGTH_SHORT).show();
                          LoadingBar.dismiss();
                      }
@@ -168,11 +181,13 @@ import java.util.regex.Pattern;
                  @Override
                  public void onComplete(@NonNull Task<AuthResult> task) {
                      if(task.isSuccessful()) {
-                         Toast.makeText(CustomerLoginRegisterActivity.this, "Customer SignIn successfully..", Toast.LENGTH_SHORT).show();
-                         LoadingBar.dismiss();
 
                          Intent customerIntent = new Intent(CustomerLoginRegisterActivity.this, CustomersMapActivity.class);
                          startActivity(customerIntent);
+
+                         Toast.makeText(CustomerLoginRegisterActivity.this, "Customer SignIn successfully..", Toast.LENGTH_SHORT).show();
+                         LoadingBar.dismiss();
+
                      }
                      else {
 

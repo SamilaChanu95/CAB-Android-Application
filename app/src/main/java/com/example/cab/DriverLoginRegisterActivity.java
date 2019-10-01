@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +35,8 @@ public class DriverLoginRegisterActivity extends AppCompatActivity {
     private ProgressDialog LoadingBar;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference DriverDatabaseRef;
+    private String onlineDriverID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,11 +140,19 @@ public class DriverLoginRegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            Toast.makeText(DriverLoginRegisterActivity.this, "Driver Register successfully..", Toast.LENGTH_SHORT).show();
-                            LoadingBar.dismiss();
+
+                            onlineDriverID = mAuth.getCurrentUser().getUid();
+                            DriverDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(onlineDriverID);
+
+
+                            DriverDatabaseRef.setValue(true);
 
                             Intent driverIntent = new Intent(DriverLoginRegisterActivity.this, DriversMapActivity.class);
                             startActivity(driverIntent);
+
+                            Toast.makeText(DriverLoginRegisterActivity.this, "Driver Register successfully..", Toast.LENGTH_SHORT).show();
+                            LoadingBar.dismiss();
+
                         }
                         else {
 
@@ -172,11 +184,12 @@ public class DriverLoginRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
-                        Toast.makeText(DriverLoginRegisterActivity.this, "Driver SignIn successfully..", Toast.LENGTH_SHORT).show();
-                        LoadingBar.dismiss();
 
                         Intent driverIntent = new Intent(DriverLoginRegisterActivity.this, DriversMapActivity.class);
                         startActivity(driverIntent);
+
+                        Toast.makeText(DriverLoginRegisterActivity.this, "Driver SignIn successfully..", Toast.LENGTH_SHORT).show();
+                        LoadingBar.dismiss();
                     }
                     else {
 
