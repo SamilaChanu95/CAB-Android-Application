@@ -74,12 +74,11 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
 
                 currentLogoutDriverStatus = true;
                 DisconnectTheDriver();
-
                 mAuth.signOut();
                 LogoutDriver();
+
             }
         });
-
     }
 
     @Override
@@ -91,6 +90,7 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
         //after 1s again update the location
         locationRequest = new LocationRequest();
         locationRequest.setInterval(3000);
