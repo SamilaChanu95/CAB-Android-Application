@@ -3,4 +3,14 @@
     <color name="colorPrimary">#ff12b6</color>
     <color name="colorPrimaryDark">#C880FF</color>
     <color name="colorAccent">#F2E712</color>
+    <color name="RedLight">#FF0000</color>
+    <color name="RedDark">#D31212</color>
+    <color name="PinkLight">#FF00AF</color>
+    <color name="PinkDark">#D31498</color>
+    <color name="YellowLight">#ECE10A</color>
+    <color name="YellowDark">#D5C817</color>
+    <color name="WhiteLight">#FFFFFF</color>
+    <color name="WhiteDark">#E2D6D6</color>
+    <color name="MagentaLight">#C880FF</color>
+    <color name="MagentaDark">#A268CE</color>
 </resources>
