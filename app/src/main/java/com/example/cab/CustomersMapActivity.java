@@ -54,8 +54,16 @@ public class CustomersMapActivity extends FragmentActivity implements OnMapReady
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-    }
+        //after 1s again update the location
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(3000);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setPriority(locationRequest.PRIORITY_HIGH_ACCURACY);
 
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+
+    }
+    
     @Override
     public void onConnectionSuspended(int i) {
 
