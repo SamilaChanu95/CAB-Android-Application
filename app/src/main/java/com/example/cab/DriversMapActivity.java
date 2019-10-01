@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.telecom.DisconnectCause;
 import android.view.View;
 import android.widget.Button;
 
@@ -49,6 +50,7 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
     private Button SettingsDriverButton;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private Boolean currentLogoutDriverStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,22 +71,16 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
         LogoutDriverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth.signOut();
 
+                currentLogoutDriverStatus = true;
+                DisconnectTheDriver();
+
+                mAuth.signOut();
                 LogoutDriver();
             }
         });
 
     }
-
-    private void LogoutDriver()
-    {
-        Intent welcomeIntent = new Intent(DriversMapActivity.this, WelcomeActivity.class);
-        welcomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(welcomeIntent);
-        finish();
-    }
-
 
     /**
      * Manipulates the map once available.
@@ -108,7 +104,7 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
     public void onConnected(@Nullable Bundle bundle) {
         //after 1s again update the location
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
+        locationRequest.setInterval(3000);
         locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(locationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -158,6 +154,16 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
     protected void onStop() {
         super.onStop();
 
+        if(!currentLogoutDriverStatus) {
+
+            DisconnectTheDriver();
+        }
+
+    }
+
+
+    private void DisconnectTheDriver() {
+
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference DriverAvailibilityRef = FirebaseDatabase.getInstance().getReference().child("Drivers Available");
 
@@ -166,6 +172,14 @@ public class DriversMapActivity extends FragmentActivity implements OnMapReadyCa
 
         geoFire.removeLocation(userID);
 
+    }
+
+    private void LogoutDriver()
+    {
+        Intent welcomeIntent = new Intent(DriversMapActivity.this, WelcomeActivity.class);
+        welcomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(welcomeIntent);
+        finish();
     }
 
 }
