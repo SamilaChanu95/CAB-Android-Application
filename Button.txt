@@ -1,0 +1,58 @@
+    <Button
+        android:id="@+id/driver_logout_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/logout1"
+        android:backgroundTint="@color/MagentaLight"
+        android:focusableInTouchMode="true" />
+
+    <Button
+        android:id="@+id/driver_settings_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/settings2"
+        android:backgroundTint="@color/MagentaLight"
+        android:focusableInTouchMode="true"/>
+
+
+
+
+<Button
+        android:id="@+id/driver_logout_btn"
+        android:layout_width="150dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        style="@style/AppTheme.RoundedLeftCornerMaterialButton"
+        android:textSize="15sp"
+        android:text="Logout"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/driver_settings_btn"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        style="@style/AppTheme.RoundedRightCornerMaterialButton"
+        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="0dp"
+        android:text="Settings"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold"/>
