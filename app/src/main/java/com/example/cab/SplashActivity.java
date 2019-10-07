@@ -27,12 +27,13 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         };
+
         thread.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        finish();;
+        finish();
     }
 }
